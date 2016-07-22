@@ -1,0 +1,66 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="/static/css/styles.css" type="text/css">
+	</head>
+	<body>
+		<h1>Hello, {{ session['name'] }}!</h1>
+		<form action="/logout" method="GET">
+			<input type="submit" name="logout" value="Log out">
+		</form>
+		<div id="today_appt">
+			<p>Here are your appointments for today, {{ date }}</p>
+			<table>
+				<thead>
+					<tr>
+						<th>Tasks</th>
+						<th>Time</th>
+						<th>Status</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for x in curr_appts %}
+					<tr>
+						<td>{{ x['task'] }}</td>
+						<td>{{ x['appt_time'] }}</td>
+						<td></td>
+						<td><a href="/edit {{ x['id'] }}">remove</a></td>
+						<td><a href="/appointments/destroy/{{ x['id'] }}">remove</a></td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div id="future_appt">
+			<p>Your Other appointments:</p>
+			<table>
+				<thead>
+					<tr>
+						<th>Tasks</th>
+						<th>Date</th>
+						<th>Time</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for x in future_appts %}
+					<tr>
+						<td>{{ x['task'] }}</td>
+						<td>{{ x['appt_date'] }}</td>
+						<td>{{ x['appt_time'] }}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<p>Add Appointment</p>
+		<form action="/add" method="POST">
+			<label>Date:</label>
+			<input type="date" name="date">
+			<label>Time</label>
+			<input type="time" name="time">
+			<label>Tasks:</label>
+			<input type="text" name="tasks">
+			<input type="submit" name="add" value="Add">
+		</form>
+	</body>
+</html>

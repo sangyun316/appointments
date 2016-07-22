@@ -9,9 +9,34 @@
 """
 from system.core.model import Model
 
-class WelcomeModel(Model):
+class Appointment(Model):
     def __init__(self):
-        super(WelcomeModel, self).__init__()
+        super(Appointment, self).__init__()
+
+    def get_today_appointments(self):
+        query = "SELECT task, appt_time, status FROM appointments WHERE DATE(appt_date) = CURDATE()"
+        return self.db.query_db(query)
+
+    def get_future_appointments(self):
+        query = "SELECT task, appt_date, appt_time FROM appointments WHERE DATE(appt_date) > DATE(NOW())"
+        return self.db.query_db(query)
+
+    def get_appointment_by_id(self, id):
+        query = "SELECT * FROM appointments WHERE id = :id"
+        data = { 'id': id}
+        return self.db.query_db(query, data)
+
+    def add_appointment(self, appointment):
+        query = "INSERT INTO appointments (task, appt_date, appt_time) VALUES (:task, :appt_date, :appt_time)"
+        data = { 'task': appointment['task'], 'appt_date': appointment['appt_date'], 'appt_time': appointment['appt_time']}
+        return self.db.query_db(query, data)
+
+    def delete_appointment(self, id):
+        query = "DELETE FROM appointments WHERE id = :id"
+        data = { "id": id }
+        return self.db.query_db(query, data)
+
+
     """
     Below is an example of a model method that queries the database for all users in a fictitious application
     
