@@ -24,35 +24,37 @@ class Appointments(Controller):
 
         """
    
-    def index(self):
-        curr_appts = self.models['Appointment'].get_today_appointments()
-        future_appts = self.models['Appointment'].get_future_appointments()
-        return self.load_view('index2.html', curr_appts=curr_appts, future_appts=future_appts)
+    def index(self, id):
+        session['id'] = id
+        return redirect('/dashboard')
 
-    def add(self):
+    def dashboard(self):
+        print session['id']
+        curr_appts = self.models['Appointment'].get_today_appointments(session['id'])
+        future_appts = self.models['Appointment'].get_future_appointments(session['id'])
+        return self.load_view('index2.html', curr_appts=curr_appts, future_appts=future_appts)        
+    
+    def add(self, user_id):
         appt_details = {
-            'task': request.form['task'],
-            'appt_date': request.form['appt_date'],
-            'appt_time': request.form['appt_time']
+            'task': request.form['tasks'],
+            'appt_date': request.form['date'],
+            'appt_time': request.form['time'],
+            'user_id': user_id
         }
-        add_status = self.models['Appointment'].add_appointment(appt_details)
-        if add_status['status'] == False:
-            for message in add_status['errors']:
-                flash(message)
-            return redirect('/appointments/')
-        else:
-            session['first_name'] = request.form['first_name']
-            return redirect('/appointments')
         self.models['Appointment'].add_appointment(appt_details)
-        return redirect('/appointments')
+        return redirect('/dashboard')
 
-    def update(self, id):
+    def edit(self, id):
         appointment = self.models['Appointment'].get_appointment_by_id(id)
-        return self.load_view('index3.html', appointment=appointment, id=id)
+        return self.load_view('index3.html', appointment=appointment[0], id=id)
+    
+    def update(self, id):
+        self.models['Appointment'].update_appointment(request.form)
+        return redirect('/dashboard')
 
     def delete(self, id):
         self.models['Appointment'].delete_appointment(id)
-        return redirect('/appointments')
+        return redirect('/dashboard')
 
         """
         A loaded model is accessible through the models attribute 

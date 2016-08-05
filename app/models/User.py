@@ -47,8 +47,8 @@ class User(Model):
             'password': hashed_pw,
             'birth_date': user['birth_date']
             }
-            self.db.query_db(query, data)
-            return {"status": True}
+            id = self.db.query_db(query, data)
+            return {"status": True, "id": id}
 
     def login_validation(self, user):
         password = user['password']

@@ -24,7 +24,10 @@ class Users(Controller):
             return redirect('/')
         else:
             session['name'] = request.form['name']
-            return redirect('/appointments')
+            session['id'] = register_status['id']
+            url = '/appointments/' + str(session['id'])
+            print url
+            return redirect(url)
 
     def login(self):
         user_info = {
@@ -34,17 +37,14 @@ class Users(Controller):
         user = self.models['User'].login_validation(user_info)
         if user:
             session['name'] = user[0]['name']
-            return redirect('/appointments')
+            print session['name']
+            session['id'] = user[0]['id']
+            url = '/appointments/' + str(session['id'])
+            print url
+            return redirect(url)
         else:
             flash('Email or password is incorrect. Please log-in again!')
             return redirect('/')
-
-    def success(self):
-        return self.load_view('index2.html')
-
-    def destroy(self, id):
-        appointment = self.models['Appointment'].get_appointment_by_id(id)
-        return self.load_view('index2.html', appointment=appointment, id=id)
 
     def logout(self):
         session.clear()

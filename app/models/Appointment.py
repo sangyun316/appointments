@@ -13,13 +13,15 @@ class Appointment(Model):
     def __init__(self):
         super(Appointment, self).__init__()
 
-    def get_today_appointments(self):
-        query = "SELECT task, appt_time, status FROM appointments WHERE DATE(appt_date) = CURDATE()"
-        return self.db.query_db(query)
+    def get_today_appointments(self, user_id):
+        query = "SELECT id, task, appt_time, status FROM appointments WHERE user_id = :user_id AND DATE(appt_date) = CURDATE()"
+        data = {'user_id': user_id}
+        return self.db.query_db(query, data)
 
-    def get_future_appointments(self):
-        query = "SELECT task, appt_date, appt_time FROM appointments WHERE DATE(appt_date) > DATE(NOW())"
-        return self.db.query_db(query)
+    def get_future_appointments(self, user_id):
+        query = "SELECT id, task, appt_date, appt_time FROM appointments WHERE user_id = :user_id AND DATE(appt_date) > DATE(NOW())"
+        data = {'user_id': user_id}
+        return self.db.query_db(query, data)
 
     def get_appointment_by_id(self, id):
         query = "SELECT * FROM appointments WHERE id = :id"
@@ -27,8 +29,24 @@ class Appointment(Model):
         return self.db.query_db(query, data)
 
     def add_appointment(self, appointment):
-        query = "INSERT INTO appointments (task, appt_date, appt_time) VALUES (:task, :appt_date, :appt_time)"
-        data = { 'task': appointment['task'], 'appt_date': appointment['appt_date'], 'appt_time': appointment['appt_time']}
+        query = "INSERT INTO appointments (task, appt_date, appt_time, status, created_at, updated_at, user_id) VALUES (:task, :appt_date, :appt_time, 'Pending', NOW(), NOW(), :user_id)"
+        data = { 
+            'task': appointment['task'], 
+            'appt_date': appointment['appt_date'], 
+            'appt_time': appointment['appt_time'],
+            'user_id': appointment['user_id']
+        }
+        return self.db.query_db(query, data)
+
+    def update_appointment(self, appointment):
+        query = "UPDATE appointments SET task = :task, status = :status, appt_date = :appt_date, appt_time = :appt_time, updated_at = NOW() WHERE id=:id"
+        data = {
+            'task': appointment['task'],
+            'status': appointment['status'],
+            'appt_date': appointment['appt_date'],
+            'appt_time': appointment['appt_time'],
+            'id': appointment['id']
+        }
         return self.db.query_db(query, data)
 
     def delete_appointment(self, id):

@@ -19,12 +19,14 @@ from system.core.router import routes
 routes['default_controller'] = 'Users'
 routes['POST']['/register'] = 'Users#register'
 routes['POST']['/login'] = 'Users#login'
-routes['GET']['/appointments'] = 'Users#success'
 routes['GET']['/logout'] = 'Users#logout'
-routes['GET']['/appointments'] = 'Appointments#index'
-routes['POST']['/add'] = 'Appointments#add'
-routes['POST']['/appointments/<id>'] = 'Appointments#update'
-routes['GET']['/delete'] = 'Appointments#delete'
+routes['GET']['/appointments/<int:id>'] = 'Appointments#index'
+routes['POST']['/add/<int:user_id>'] = 'Appointments#add'
+routes['GET']['/edit/<int:id>'] = 'Appointments#edit'
+routes['GET']['/delete/<int:id>'] = 'Appointments#delete'
+routes['GET']['/dashboard'] = 'Appointments#dashboard'
+routes['POST']['/update/<int:id>'] = 'Appointments#update'
+
 """
     You can add routes and specify their handlers as follows:
 

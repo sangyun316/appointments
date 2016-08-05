@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="/static/css/styles.css" type="text/css">
+	</head>
+	<body>
+		<a href="/dashboard">Dashboard</a>
+		| <a href="/logout">Logout</a>
+		<form action="/update/{{ id }}" method="POST">
+			<label>Tasks:</label>
+			<input type="text" name="task" value="{{appointment['task']}}">
+			<label>Status:</label>
+			<select name="status" >
+				<option value='Done'>Done</option>
+				<option value='Pending' selected>Pending</option>
+				<option value='Missed'>Missed</option>
+			</select>
+			<label>Date:</label>
+			<input type="date" name="appt_date" value="{{appointment['appt_date']}}">
+			<label>Time:</label>
+			<input type="time" name="appt_time" value="{{appointment['appt_time']}}">
+			<input type="hidden" name="id" value="{{id}}">
+			<input type="submit" name="update" value="Update">
+		</form>
+	</body>
+</html>

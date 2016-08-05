@@ -21,11 +21,10 @@
 				<tbody>
 				{% for x in curr_appts %}
 					<tr>
-						<td>{{ x['task'] }}</td>
+						<td>{{ x['task']}}</td>
 						<td>{{ x['appt_time'] }}</td>
-						<td></td>
-						<td><a href="/edit {{ x['id'] }}">remove</a></td>
-						<td><a href="/appointments/destroy/{{ x['id'] }}">remove</a></td>
+						<td>{{ x['status'] }}
+						<td><a href="/edit/{{x['id']}}">edit </a><a href="/delete/{{x['id']}}"> Delete</a></td>
 					</tr>
 				{% endfor %}
 				</tbody>
@@ -53,7 +52,7 @@
 			</table>
 		</div>
 		<p>Add Appointment</p>
-		<form action="/add" method="POST">
+		<form action="/add/{{session['id']}}" method="POST">
 			<label>Date:</label>
 			<input type="date" name="date">
 			<label>Time</label>
